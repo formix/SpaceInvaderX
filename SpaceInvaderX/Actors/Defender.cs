@@ -80,16 +80,12 @@ namespace SpaceInvaderX.Actors
             {
                 while (!Dead && !Stage.IsDisposed)
                 {
-                    if (_dx != 0 || _dy != 0)
+                    if (Stage.IsStarted && (_dx != 0 || _dy != 0))
                     {
                         X += _dx;
                         Y += _dy;
-                        Thread.Sleep(25);
                     }
-                    else
-                    {
-                        Thread.Sleep(5);
-                    }
+                    Thread.Sleep(25);
                 }
             }).Start();
 

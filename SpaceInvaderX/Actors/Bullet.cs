@@ -28,6 +28,15 @@ namespace SpaceInvaderX.Actors
             }).Start();
         }
 
+        public override Region HitBox
+        {
+            get
+            {
+                var rect = CreateBulletRectangle();
+                return new Region(rect);
+            }
+        }
+
         public override void Collide(Asset other)
         {
             throw new NotImplementedException();
@@ -35,7 +44,13 @@ namespace SpaceInvaderX.Actors
 
         public override void Draw(Graphics g)
         {
-            g.FillRectangle(Brushes.OrangeRed, X - 1, Y - 6, 2, 6);
+            var rect = CreateBulletRectangle();
+            g.FillRectangle(Brushes.OrangeRed, rect);
+        }
+
+        private Rectangle CreateBulletRectangle()
+        {
+            return new Rectangle(X - 1, Y - 6, 2, 6);
         }
     }
 }

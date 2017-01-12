@@ -18,6 +18,7 @@ namespace SpaceInvaderX.Engine
         private Bitmap _stageView;
         private Graphics _stageGraphics;
         private long _frameCount;
+        private HashSet<Asset> _collidable;
 
         public Stage()
         {
@@ -27,6 +28,7 @@ namespace SpaceInvaderX.Engine
             _stageView = new Bitmap(320, 240);
             _stageGraphics = Graphics.FromImage(_stageView);
             _frameCount = 0;
+            _collidable = new HashSet<Asset>();
             Assets = new List<Asset>();
             IsStarted = false;
         }
@@ -85,6 +87,15 @@ namespace SpaceInvaderX.Engine
                             {
                                 livingAssets.Add(asset);
                             }
+                            else
+                            {
+                                // Calling remove if the asset is not 
+                                // present do not break.
+                                lock (_collidable)
+                                {
+                                    _collidable.Remove(asset);
+                                }
+                            }
                         }
                         Assets = livingAssets;
                     }
@@ -128,6 +139,13 @@ namespace SpaceInvaderX.Engine
             lock (Assets)
             {
                 Assets.Add(asset);
+                if (asset.HitBox != null)
+                {
+                    lock (_collidable)
+                    {
+                        _collidable.Add(asset);
+                    }
+                }
             }
         }
 
