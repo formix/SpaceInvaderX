@@ -23,9 +23,28 @@ namespace SpaceInvaderX.Actors
                 {
                     Thread.Sleep(25);
                     Y -= 4;
+                    CheckCollisions();
                 }
                 Dead = true;
             }).Start();
+        }
+
+        private void CheckCollisions()
+        {
+            var collidableAssets = Stage.GetCollidables();
+            //var hitBox = HitBox;
+            foreach (var asset in collidableAssets)
+            {
+                if (asset.HitBox.IsVisible(CreateBulletRectangle()))
+                {
+                    if (asset is Target)
+                    {
+                        asset.Collide(this);
+                        Dead = true;
+                        return;
+                    }
+                }
+            }
         }
 
         public override Region HitBox
@@ -39,7 +58,6 @@ namespace SpaceInvaderX.Actors
 
         public override void Collide(Asset other)
         {
-            throw new NotImplementedException();
         }
 
         public override void Draw(Graphics g)

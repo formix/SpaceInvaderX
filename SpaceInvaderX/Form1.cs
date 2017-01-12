@@ -22,9 +22,34 @@ namespace SpaceInvaderX
         {
             ClientSize = new Size(960, 720);
             var defender = stage1.Create<Defender>();
-            defender.X = 200;
-            defender.Y = 200;
+            defender.X = 50;
+            defender.Y = 180;
             stage1.AddAsset(defender);
+
+            Target target1 = stage1.Create<Target>();
+            target1.X = 70;
+            target1.Y = 60;
+            stage1.AddAsset(target1);
+
+
+            Target target2 = stage1.Create<Target>();
+            target2.X = 100;
+            target2.Y = 100;
+            stage1.AddAsset(target2);
+
+
+            Target target3 = stage1.Create<Target>();
+            target3.X = 140;
+            target3.Y = 150;
+            stage1.AddAsset(target3);
+
+
+            Target target4 = stage1.Create<Target>();
+            target4.X = 230;
+            target4.Y = 30;
+            stage1.AddAsset(target4);
+
+
             stage1.Start();
         }
 

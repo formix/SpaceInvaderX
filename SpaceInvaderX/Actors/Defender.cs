@@ -63,7 +63,6 @@ namespace SpaceInvaderX.Actors
 
         public override void Collide(Asset other)
         {
-            throw new NotImplementedException();
         }
 
         public override void Draw(Graphics g)

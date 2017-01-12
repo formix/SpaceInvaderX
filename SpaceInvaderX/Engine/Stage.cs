@@ -53,6 +53,15 @@ namespace SpaceInvaderX.Engine
             StartDeadBodyCollectionLoop();
         }
 
+
+        public IEnumerable<Asset> GetCollidables()
+        {
+            lock (_collidable)
+            {
+                return new LinkedList<Asset>(_collidable);
+            }
+        }
+
         private void StartAnimationLoop()
         {
             Task.Run(() =>

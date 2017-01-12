@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Actors\Bullet.cs" />
     <Compile Include="Actors\Defender.cs" />
+    <Compile Include="Actors\Target.cs" />
     <Compile Include="Engine\Asset.cs" />
     <Compile Include="Engine\KeyStates.cs" />
     <Compile Include="Engine\Stage.cs">
