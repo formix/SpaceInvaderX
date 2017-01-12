@@ -13,8 +13,15 @@ namespace SpaceInvaderX.Engine
         public int X { get; set; }
         public int Y { get; set; }
         public int Z { get; set; }
-        public Region HitBox { get; set; }
         public bool Dead { get; set; }
+
+        public virtual Region HitBox
+        {
+            get
+            {
+                return null;
+            }
+        }
 
         public Asset(Stage stage)
         {

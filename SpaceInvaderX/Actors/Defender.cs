@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SpaceInvaderX.Engine;
+using System.Drawing.Drawing2D;
 
 namespace SpaceInvaderX.Actors
 {
@@ -38,6 +39,26 @@ namespace SpaceInvaderX.Actors
             stage.KeyUp += Stage_KeyUp;
 
             Animate();
+        }
+
+        public override Region HitBox
+        {
+            get
+            {
+                var path = new GraphicsPath();
+                var points = new Point[] {
+                    new Point(X - 7, Y + 9),
+                    new Point(X - 7, Y + 5),
+                    new Point(X - 3, Y + 2),
+                    new Point(X - 1, Y),
+                    new Point(X, Y),
+                    new Point(X + 3, Y + 2),
+                    new Point(X + 7, Y + 5),
+                    new Point(X + 7, Y + 9),
+                };
+                path.AddPolygon(points);
+                return new Region(path);
+            }
         }
 
         public override void Collide(Asset other)
