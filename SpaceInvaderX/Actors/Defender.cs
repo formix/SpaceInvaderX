@@ -70,7 +70,12 @@ namespace SpaceInvaderX.Actors
         {
             if (!Dead)
             {
-                if (Stage.FrameCount % 2 != 0)
+                if (Stage.GetKeyState(Keys.Space) == KeyStates.Down)
+                {
+                    Shoot();
+                }
+
+                if (Stage.Frame % 2 != 0)
                 {
                     return;
                 }
@@ -90,11 +95,6 @@ namespace SpaceInvaderX.Actors
                 if (Stage.GetKeyState(Keys.S) == KeyStates.Down)
                 {
                     Y += Speed;
-                }
-
-                if (Stage.GetKeyState(Keys.Space) == KeyStates.Down)
-                {
-                    Shoot();
                 }
             }
         }

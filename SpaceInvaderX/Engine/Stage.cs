@@ -17,7 +17,7 @@ namespace SpaceInvaderX.Engine
 
         private Bitmap _stageView;
         private Graphics _stageGraphics;
-        private long _frameCount;
+        private long _frame;
         private ICollection<Asset> _assets;
         private ICollection<Asset> _newAssets;
 
@@ -28,18 +28,18 @@ namespace SpaceInvaderX.Engine
             _keyStates = new Dictionary<Keys, KeyStates>();
             _stageView = new Bitmap(320, 240);
             _stageGraphics = Graphics.FromImage(_stageView);
-            _frameCount = 0;
+            _frame = 0;
             _assets = new HashSet<Asset>();
             _newAssets = new LinkedList<Asset>();
             FrameDuration = 15;
             IsStarted = false;
         }
 
-        public long FrameCount
+        public long Frame
         {
             get
             {
-                return _frameCount;
+                return _frame;
             }
         }
 
@@ -49,7 +49,7 @@ namespace SpaceInvaderX.Engine
 
         public void Start()
         {
-            _frameCount = 0;
+            _frame = 0;
             IsStarted = true;
             StartAnimationLoop();
         }
@@ -62,15 +62,15 @@ namespace SpaceInvaderX.Engine
                 while (IsStarted)
                 {
                     var begin = DateTime.Now;
+                    CleanUp();
                     AnimateAssets();
                     ImportNewAssets();
-                    CleanUp();
                     UpdateStageView();
                     var elapsedTime = DateTime.Now - begin;
                     int sleepTime = ClaculateSleepTime(elapsedTime);
                     Thread.Sleep(sleepTime);
                     Invalidate();
-                    _frameCount++;
+                    _frame++;
                 }
             });
         }
@@ -103,7 +103,7 @@ namespace SpaceInvaderX.Engine
 
         private void CleanUp()
         {
-            if (_frameCount % 50 != 0)
+            if (_frame % 50 != 0)
             {
                 return;
             }
