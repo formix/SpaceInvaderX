@@ -110,7 +110,7 @@ namespace SpaceInvaderX.Actors
             _lastBullet = Stage.Create<Bullet>();
             _lastBullet.Source = this;
             _lastBullet.X = X;
-            _lastBullet.Y = Y - 1;
+            _lastBullet.Y = Y;
             Stage.AddAsset(_lastBullet);
         }
     }
