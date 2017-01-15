@@ -14,9 +14,6 @@ namespace SpaceInvaderX.Actors
     public class Defender : Asset
     {
         private Rectangle[] _rectangles;
-        private int _dx;
-        private int _dy;
-
         private Bullet _lastBullet;
 
         public Defender(Stage stage) : base(stage)
@@ -30,16 +27,12 @@ namespace SpaceInvaderX.Actors
             _rectangles[5] = new Rectangle(-5, 7, 10, 1);
             _rectangles[6] = new Rectangle(-7, 8, 14, 2);
 
-            _dx = 0;
-            _dy = 0;
+            Speed = 1;
 
             _lastBullet = null;
-
-            Stage.KeyDown += Stage_KeyDown;
-            stage.KeyUp += Stage_KeyUp;
-
-            Animate();
         }
+
+        public int Speed { get; set; }
 
         public override Region HitBox
         {
@@ -73,69 +66,39 @@ namespace SpaceInvaderX.Actors
             }
         }
 
-        public void Animate()
+        public override void Animate()
         {
-            new Thread(() =>
+            if (!Dead)
             {
-                while (!Dead && !Stage.IsDisposed)
+                if (Stage.FrameCount % 2 != 0)
                 {
-                    if (Stage.IsStarted && (_dx != 0 || _dy != 0))
-                    {
-                        X += _dx;
-                        Y += _dy;
-                    }
-                    Thread.Sleep(25);
+                    return;
                 }
-            }).Start();
 
-        }
+                if (Stage.GetKeyState(Keys.A) == KeyStates.Down)
+                {
+                    X -= Speed;
+                }
+                if (Stage.GetKeyState(Keys.D) == KeyStates.Down)
+                {
+                    X += Speed;
+                }
+                if (Stage.GetKeyState(Keys.W) == KeyStates.Down)
+                {
+                    Y -= Speed;
+                }
+                if (Stage.GetKeyState(Keys.S) == KeyStates.Down)
+                {
+                    Y += Speed;
+                }
 
-        private void Stage_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (!Stage.IsStarted)
-            {
-                return;
-            }
-
-            UpdateAxisSpeeds(e.KeyCode, -1);
-        }
-
-        private void Stage_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-        {
-            if (!Stage.IsStarted)
-            {
-                return;
-            }
-
-            if (e.KeyCode == Keys.Space)
-            {
-                Shoot();
-            }
-            else
-            {
-                UpdateAxisSpeeds(e.KeyCode, 1);
+                if (Stage.GetKeyState(Keys.Space) == KeyStates.Down)
+                {
+                    Shoot();
+                }
             }
         }
 
-        private void UpdateAxisSpeeds(Keys keyCode, int dir)
-        {
-            var speed = 1 * dir;
-            switch (keyCode)
-            {
-                case Keys.D:
-                    _dx += speed;
-                    break;
-                case Keys.W:
-                    _dy -= speed;
-                    break;
-                case Keys.A:
-                    _dx -= speed;
-                    break;
-                case Keys.S:
-                    _dy += speed;
-                    break;
-            }
-        }
 
         private void Shoot()
         {
@@ -145,10 +108,10 @@ namespace SpaceInvaderX.Actors
             }
 
             _lastBullet = Stage.Create<Bullet>();
+            _lastBullet.Source = this;
             _lastBullet.X = X;
             _lastBullet.Y = Y - 1;
             Stage.AddAsset(_lastBullet);
-            _lastBullet.Animate();
         }
     }
 }

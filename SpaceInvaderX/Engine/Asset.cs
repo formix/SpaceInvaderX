@@ -15,6 +15,11 @@ namespace SpaceInvaderX.Engine
         public int Z { get; set; }
         public bool Dead { get; set; }
 
+        public Asset(Stage stage)
+        {
+            this.Stage = stage;
+        }
+
         public virtual Region HitBox
         {
             get
@@ -23,9 +28,8 @@ namespace SpaceInvaderX.Engine
             }
         }
 
-        public Asset(Stage stage)
+        public virtual void Animate()
         {
-            this.Stage = stage;
         }
 
         public abstract void Draw(Graphics g);

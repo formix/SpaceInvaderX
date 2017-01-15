@@ -18,7 +18,8 @@ namespace SpaceInvaderX.Engine
         private Bitmap _stageView;
         private Graphics _stageGraphics;
         private long _frameCount;
-        private HashSet<Asset> _collidable;
+        private ICollection<Asset> _assets;
+        private ICollection<Asset> _newAssets;
 
         public Stage()
         {
@@ -28,8 +29,9 @@ namespace SpaceInvaderX.Engine
             _stageView = new Bitmap(320, 240);
             _stageGraphics = Graphics.FromImage(_stageView);
             _frameCount = 0;
-            _collidable = new HashSet<Asset>();
-            Assets = new List<Asset>();
+            _assets = new HashSet<Asset>();
+            _newAssets = new LinkedList<Asset>();
+            FrameDuration = 15;
             IsStarted = false;
         }
 
@@ -41,7 +43,7 @@ namespace SpaceInvaderX.Engine
             }
         }
 
-        public List<Asset> Assets { get; private set; }
+        public int FrameDuration { get; set; }
 
         public bool IsStarted { get; set; }
 
@@ -50,17 +52,8 @@ namespace SpaceInvaderX.Engine
             _frameCount = 0;
             IsStarted = true;
             StartAnimationLoop();
-            StartDeadBodyCollectionLoop();
         }
 
-
-        public IEnumerable<Asset> GetCollidables()
-        {
-            lock (_collidable)
-            {
-                return new LinkedList<Asset>(_collidable);
-            }
-        }
 
         private void StartAnimationLoop()
         {
@@ -69,47 +62,61 @@ namespace SpaceInvaderX.Engine
                 while (IsStarted)
                 {
                     var begin = DateTime.Now;
+                    AnimateAssets();
+                    ImportNewAssets();
+                    CleanUp();
                     UpdateStageView();
-                    Invalidate();
-                    var duration = DateTime.Now - begin;
-                    var sleepTime = (int)(duration.TotalMilliseconds < 15 ? 15 - duration.TotalMilliseconds : 0);
+                    var elapsedTime = DateTime.Now - begin;
+                    int sleepTime = ClaculateSleepTime(elapsedTime);
                     Thread.Sleep(sleepTime);
+                    Invalidate();
                     _frameCount++;
                 }
             });
         }
 
-        private void StartDeadBodyCollectionLoop()
+        private int ClaculateSleepTime(TimeSpan elapsedTime)
         {
-            Task.Run(() =>
+            if (elapsedTime.TotalMilliseconds < FrameDuration)
             {
-                while (IsStarted)
-                {
-                    Thread.Sleep(1000);
+                return (int)(FrameDuration - elapsedTime.TotalMilliseconds);
+            }
+            return 0;
+        }
 
-                    lock (Assets)
-                    {
-                        var livingAssets = new List<Asset>();
-                        foreach (var asset in Assets)
-                        {
-                            if (!asset.Dead)
-                            {
-                                livingAssets.Add(asset);
-                            }
-                            else
-                            {
-                                // Calling remove if the asset is not 
-                                // present do not break.
-                                lock (_collidable)
-                                {
-                                    _collidable.Remove(asset);
-                                }
-                            }
-                        }
-                        Assets = livingAssets;
-                    }
+        private void ImportNewAssets()
+        {
+            foreach (var asset in _newAssets)
+            {
+                _assets.Add(asset);
+            }
+            _newAssets.Clear();
+        }
+
+        private void AnimateAssets()
+        {
+            foreach (var asset in _assets)
+            {
+                asset.Animate();
+            }
+        }
+
+        private void CleanUp()
+        {
+            if (_frameCount % 50 != 0)
+            {
+                return;
+            }
+
+            var livingAssets = new List<Asset>();
+            foreach (var asset in _assets)
+            {
+                if (!asset.Dead)
+                {
+                    livingAssets.Add(asset);
                 }
-            });
+            }
+            _assets = livingAssets;
         }
 
         public void Stop()
@@ -145,17 +152,7 @@ namespace SpaceInvaderX.Engine
 
         public void AddAsset(Asset asset)
         {
-            lock (Assets)
-            {
-                Assets.Add(asset);
-                if (asset.HitBox != null)
-                {
-                    lock (_collidable)
-                    {
-                        _collidable.Add(asset);
-                    }
-                }
-            }
+            _newAssets.Add(asset);
         }
 
         private void UpdateStageView()
@@ -163,20 +160,17 @@ namespace SpaceInvaderX.Engine
             lock (_stageView)
             {
                 _stageGraphics.FillRectangle(Brushes.Black, 0, 0, _stageView.Width, _stageView.Height);
-                lock (Assets)
+                foreach (var asset in _assets)
                 {
-                    foreach (var asset in Assets)
+                    if (!asset.Dead)
                     {
-                        if (!asset.Dead)
-                        {
-                            asset.Draw(_stageGraphics);
-                        }
+                        asset.Draw(_stageGraphics);
                     }
                 }
             }
         }
 
-        public T Create<T>() where T: Asset
+        public T Create<T>() where T : Asset
         {
             var type = typeof(T);
             var ctor = type.GetConstructor(new Type[] { typeof(Stage) });

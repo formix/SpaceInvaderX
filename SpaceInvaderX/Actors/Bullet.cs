@@ -15,35 +15,18 @@ namespace SpaceInvaderX.Actors
         {
         }
 
-        public void Animate()
-        {
-            new Thread(() =>
-            {
-                while (Y > -6)
-                {
-                    Thread.Sleep(25);
-                    Y -= 4;
-                    CheckCollisions();
-                }
-                Dead = true;
-            }).Start();
-        }
 
-        private void CheckCollisions()
+        public Asset Source { get; set; }
+
+        public override void Animate()
         {
-            var collidableAssets = Stage.GetCollidables();
-            //var hitBox = HitBox;
-            foreach (var asset in collidableAssets)
+            if (Y > -6)
             {
-                if (asset.HitBox.IsVisible(CreateBulletRectangle()))
-                {
-                    if (asset is Target)
-                    {
-                        asset.Collide(this);
-                        Dead = true;
-                        return;
-                    }
-                }
+                Y -= 3;
+            }
+            else
+            {
+                Dead = true;
             }
         }
 
