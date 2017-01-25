@@ -53,6 +53,7 @@ namespace SpaceInvaderX.Actors
 
         public override void Collide(ICollidable other)
         {
+            Dead = true;
         }
 
         public override void Draw(Graphics g)
