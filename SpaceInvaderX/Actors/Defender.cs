@@ -11,7 +11,7 @@ using System.Drawing.Drawing2D;
 
 namespace SpaceInvaderX.Actors
 {
-    public class Defender : Asset
+    public class Defender : CollidableAsset
     {
         private Rectangle[] _rectangles;
         private Bullet _lastBullet;
@@ -34,27 +34,24 @@ namespace SpaceInvaderX.Actors
 
         public int Speed { get; set; }
 
-        public override Region HitBox
+        public override GraphicsPath CreateHitBox()
         {
-            get
-            {
-                var path = new GraphicsPath();
-                var points = new Point[] {
-                    new Point(X - 7, Y + 9),
-                    new Point(X - 7, Y + 5),
-                    new Point(X - 3, Y + 2),
-                    new Point(X - 1, Y),
-                    new Point(X, Y),
-                    new Point(X + 3, Y + 2),
-                    new Point(X + 7, Y + 5),
-                    new Point(X + 7, Y + 9),
-                };
-                path.AddPolygon(points);
-                return new Region(path);
-            }
+            var path = new GraphicsPath();
+            var points = new Point[] {
+                new Point(X - 7, Y + 9),
+                new Point(X - 7, Y + 5),
+                new Point(X - 3, Y + 2),
+                new Point(X - 1, Y),
+                new Point(X, Y),
+                new Point(X + 3, Y + 2),
+                new Point(X + 7, Y + 5),
+                new Point(X + 7, Y + 9),
+            };
+            path.AddPolygon(points);
+            return path;
         }
 
-        public override void Collide(Asset other)
+        public override void Collide(ICollidable other)
         {
         }
 

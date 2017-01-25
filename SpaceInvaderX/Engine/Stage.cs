@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using System.Drawing.Drawing2D;
 
 namespace SpaceInvaderX.Engine
 {
@@ -63,11 +64,12 @@ namespace SpaceInvaderX.Engine
                 {
                     var begin = DateTime.Now;
                     CleanUp();
+                    CheckCollisions();
                     AnimateAssets();
                     ImportNewAssets();
                     UpdateStageView();
                     var elapsedTime = DateTime.Now - begin;
-                    int sleepTime = ClaculateSleepTime(elapsedTime);
+                    int sleepTime = ComputeSleepTime(elapsedTime);
                     Thread.Sleep(sleepTime);
                     Invalidate();
                     _frame++;
@@ -75,7 +77,56 @@ namespace SpaceInvaderX.Engine
             });
         }
 
-        private int ClaculateSleepTime(TimeSpan elapsedTime)
+        private void CheckCollisions()
+        {
+            var collidables = _assets
+                .Where(a => a is ICollidable)
+                .Select(a => (CollidableAsset)a)
+                .AsEnumerable();
+            CheckCollisions(collidables);
+        }
+
+        private void CheckCollisions(IEnumerable<CollidableAsset> collidables)
+        {
+            foreach (var collidable in collidables)
+            {
+                CheckCollisions(collidables, collidable);
+            }
+        }
+
+        private void CheckCollisions(IEnumerable<CollidableAsset> collidables, CollidableAsset asset1)
+        {
+            foreach (var asset2 in collidables)
+            {
+                if ((asset1 != asset2) && (asset1.Z == asset2.Z))
+                {
+                    CheckCollision(asset1, asset2);
+                }
+            }
+        }
+
+        private void CheckCollision(CollidableAsset asset1, CollidableAsset asset2)
+        {
+            using (var path1 = asset1.CreateHitBox())
+            {
+                using (var path2 = asset2.CreateHitBox())
+                {
+                    using (var region1 = new Region(path1))
+                    {
+                        using (var region2 = new Region(path2))
+                        {
+                            region1.Intersect(region2);
+                            if (region1.GetRegionScans(new Matrix(1, 0, 0, 1, 0, 0)).Length > 0)
+                            {
+                                asset1.Collide(asset2);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private int ComputeSleepTime(TimeSpan elapsedTime)
         {
             if (elapsedTime.TotalMilliseconds < FrameDuration)
             {

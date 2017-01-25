@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using SpaceInvaderX.Engine;
+using System.Drawing.Drawing2D;
 
 namespace SpaceInvaderX.Actors
 {
-    public class Bullet : Asset
+    public class Bullet : CollidableAsset
     {
         public Bullet(Stage stage) : base(stage)
         {
@@ -30,17 +31,17 @@ namespace SpaceInvaderX.Actors
             }
         }
 
-        public override Region HitBox
+        public override GraphicsPath CreateHitBox()
         {
-            get
-            {
-                var rect = CreateBulletRectangle();
-                return new Region(rect);
-            }
+            var rect = CreateBulletRectangle();
+            var path = new GraphicsPath();
+            path.AddRectangle(rect);
+            return path;
         }
 
-        public override void Collide(Asset other)
+        public override void Collide(ICollidable other)
         {
+            Dead = true;
         }
 
         public override void Draw(Graphics g)

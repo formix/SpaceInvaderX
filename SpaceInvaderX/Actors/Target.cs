@@ -5,34 +5,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SpaceInvaderX.Engine;
+using System.Drawing.Drawing2D;
 
 namespace SpaceInvaderX.Actors
 {
-    public class Target : Asset
+    public class Target : CollidableAsset
     {
         public Target(Stage stage) : base(stage)
         {
-        }
-
-
-        public override Region HitBox
-        {
-            get
-            {
-                var rect = CreateRect();
-                return new Region(rect);
-            }
-        }
-
-        public override void Collide(Asset other)
-        {
-            Dead = true;
         }
 
         public override void Draw(Graphics g)
         {
             var rect = CreateRect();
             g.FillRectangle(Brushes.Yellow, rect);
+        }
+
+        public override void Collide(ICollidable other)
+        {
+            Dead = true;
+        }
+
+        public override GraphicsPath CreateHitBox()
+        {
+            var rect = CreateRect();
+            var path = new GraphicsPath();
+            path.AddRectangle(rect);
+            return path;
         }
 
         private Rectangle CreateRect()
