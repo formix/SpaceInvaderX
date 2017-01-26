@@ -34,9 +34,9 @@ namespace SpaceInvaderX.Actors
             return path;
         }
 
-        private Rectangle CreateRect()
+        private RectangleF CreateRect()
         {
-            return new Rectangle(X, Y, 10, 10);
+            return new RectangleF(X, Y, 10, 10);
         }
     }
 }

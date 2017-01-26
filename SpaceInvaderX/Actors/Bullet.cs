@@ -50,9 +50,9 @@ namespace SpaceInvaderX.Actors
             g.FillRectangle(Brushes.OrangeRed, rect);
         }
 
-        private Rectangle CreateBulletRectangle()
+        private RectangleF CreateBulletRectangle()
         {
-            return new Rectangle(X - 1, Y - 6, 2, 6);
+            return new RectangleF(X - 1, Y - 6, 2, 6);
         }
     }
 }

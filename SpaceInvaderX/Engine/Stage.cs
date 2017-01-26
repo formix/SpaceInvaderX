@@ -98,7 +98,8 @@ namespace SpaceInvaderX.Engine
         {
             foreach (var asset2 in collidables)
             {
-                if ((asset1 != asset2) && (asset1.Z == asset2.Z))
+                if ((asset1 != asset2) && (asset1.Z == asset2.Z) && 
+                    !asset1.Dead && !asset2.Dead)
                 {
                     CheckCollision(asset1, asset2);
                 }
@@ -119,6 +120,7 @@ namespace SpaceInvaderX.Engine
                             if (region1.GetRegionScans(new Matrix(1, 0, 0, 1, 0, 0)).Length > 0)
                             {
                                 asset1.Collide(asset2);
+                                asset2.Collide(asset1);
                             }
                         }
                     }

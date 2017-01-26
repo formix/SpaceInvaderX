@@ -27,25 +27,25 @@ namespace SpaceInvaderX.Actors
             _rectangles[5] = new Rectangle(-5, 7, 10, 1);
             _rectangles[6] = new Rectangle(-7, 8, 14, 2);
 
-            Speed = 1;
+            Speed = 1.33f;
 
             _lastBullet = null;
         }
 
-        public int Speed { get; set; }
+        public float Speed { get; set; }
 
         public override GraphicsPath CreateHitBox()
         {
             var path = new GraphicsPath();
-            var points = new Point[] {
-                new Point(X - 7, Y + 9),
-                new Point(X - 7, Y + 5),
-                new Point(X - 3, Y + 2),
-                new Point(X - 1, Y),
-                new Point(X, Y),
-                new Point(X + 3, Y + 2),
-                new Point(X + 7, Y + 5),
-                new Point(X + 7, Y + 9),
+            var points = new PointF[] {
+                new PointF(X - 7, Y + 9),
+                new PointF(X - 7, Y + 5),
+                new PointF(X - 3, Y + 2),
+                new PointF(X - 1, Y),
+                new PointF(X, Y),
+                new PointF(X + 3, Y + 2),
+                new PointF(X + 7, Y + 5),
+                new PointF(X + 7, Y + 9),
             };
             path.AddPolygon(points);
             return path;

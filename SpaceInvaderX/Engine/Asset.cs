@@ -11,9 +11,9 @@ namespace SpaceInvaderX.Engine
     public abstract class Asset
     {
         public Stage Stage { get; private set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Z { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Z { get; set; }
         public bool Dead { get; set; }
 
 
