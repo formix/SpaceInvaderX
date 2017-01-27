@@ -213,7 +213,8 @@ namespace SpaceInvaderX.Engine
             lock (_stageView)
             {
                 _stageGraphics.FillRectangle(Brushes.Black, 0, 0, _stageView.Width, _stageView.Height);
-                foreach (var asset in _assets)
+                var orderedAsset = _assets.OrderBy(a => -a.Z);
+                foreach (var asset in orderedAsset)
                 {
                     if (!asset.Dead)
                     {

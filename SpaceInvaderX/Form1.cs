@@ -49,6 +49,8 @@ namespace SpaceInvaderX
             target4.Y = 30;
             stage1.AddAsset(target4);
 
+             
+
 
             stage1.Start();
         }
