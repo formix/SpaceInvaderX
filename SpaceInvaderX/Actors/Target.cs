@@ -24,6 +24,10 @@ namespace SpaceInvaderX.Actors
         public override void Collide(ICollidable other)
         {
             Dead = true;
+            var explosion = Stage.Create<Explosion>();
+            explosion.X = X + 5;
+            explosion.Y = Y + 5;
+            Stage.AddAsset(explosion);
         }
 
         public override GraphicsPath CreateHitBox()
