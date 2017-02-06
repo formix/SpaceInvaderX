@@ -23,11 +23,12 @@ namespace SpaceInvaderX.Actors
 
         public override void Collide(ICollidable other)
         {
-            Dead = true;
             var explosion = Stage.Create<Explosion>();
             explosion.X = X + 5;
             explosion.Y = Y + 5;
+            explosion.Color = Color.Orange;
             Stage.AddAsset(explosion);
+            Dispose();
         }
 
         public override GraphicsPath CreateHitBox()

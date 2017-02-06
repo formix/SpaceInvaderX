@@ -99,7 +99,7 @@ namespace SpaceInvaderX.Engine
             foreach (var asset2 in collidables)
             {
                 if ((asset1 != asset2) && (asset1.Z == asset2.Z) && 
-                    !asset1.Dead && !asset2.Dead)
+                    !asset1.IsDisposed && !asset2.IsDisposed)
                 {
                     CheckCollision(asset1, asset2);
                 }
@@ -164,7 +164,7 @@ namespace SpaceInvaderX.Engine
             var livingAssets = new List<Asset>();
             foreach (var asset in _assets)
             {
-                if (!asset.Dead)
+                if (!asset.IsDisposed)
                 {
                     livingAssets.Add(asset);
                 }
@@ -216,7 +216,7 @@ namespace SpaceInvaderX.Engine
                 var orderedAsset = _assets.OrderBy(a => -a.Z);
                 foreach (var asset in orderedAsset)
                 {
-                    if (!asset.Dead)
+                    if (!asset.IsDisposed)
                     {
                         asset.Draw(_stageGraphics);
                     }

@@ -14,13 +14,25 @@ namespace SpaceInvaderX.Actors
         private object _mutex;
         private Timer _timer;
         private int _step;
+        private Brush _brush;
 
 
         public Explosion(Stage stage) : base(stage)
         {
             _mutex = new object();
-            _timer = new Timer(state => UpdateStep(), null, 0, 20);
+            _timer = new Timer(state => UpdateStep(), null, 5, 20);
             _step = 0;
+            _brush = new SolidBrush(Color.OrangeRed);
+        }
+
+        public Color Color
+        {
+            get { return ((SolidBrush)_brush).Color; }
+            set
+            {
+                _brush.Dispose();
+                _brush = new SolidBrush(value);
+            }
         }
 
         public override void Draw(Graphics g)
@@ -29,12 +41,22 @@ namespace SpaceInvaderX.Actors
             lock(_mutex)
             {
                 radius = (_step + 1) * 1.25f;
-                if (Dead)
+                if (IsDisposed)
                 {
                     return;
                 }
             }
-            g.FillEllipse(Brushes.Red, X - radius, Y - radius, radius * 2, radius * 2);
+            g.FillEllipse(_brush, X - radius, Y - radius, radius * 2, radius * 2);
+        }
+
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _brush.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
         private void UpdateStep()
@@ -44,7 +66,7 @@ namespace SpaceInvaderX.Actors
                 if (_step == 5)
                 {
                     _timer.Dispose();
-                    Dead = true;
+                    Dispose();
                     return;
                 }
                 _step++;

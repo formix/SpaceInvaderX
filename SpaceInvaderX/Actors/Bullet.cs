@@ -27,7 +27,7 @@ namespace SpaceInvaderX.Actors
             }
             else
             {
-                Dead = true;
+                Dispose();
             }
         }
 
@@ -41,7 +41,7 @@ namespace SpaceInvaderX.Actors
 
         public override void Collide(ICollidable other)
         {
-            Dead = true;
+            Dispose();
         }
 
         public override void Draw(Graphics g)

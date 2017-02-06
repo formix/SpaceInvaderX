@@ -53,7 +53,21 @@ namespace SpaceInvaderX.Actors
 
         public override void Collide(ICollidable other)
         {
-            Dead = true;
+            if (other is Bullet)
+            {
+                if (((Bullet)other).Source == this)
+                {
+                    return;
+                }
+            }
+
+            var explosion = Stage.Create<Explosion>();
+            explosion.X = X;
+            explosion.Y = Y + 5;
+            explosion.Color = Color.DarkBlue;
+            Stage.AddAsset(explosion);
+
+            Dispose();
         }
 
         public override void Draw(Graphics g)
@@ -66,7 +80,7 @@ namespace SpaceInvaderX.Actors
 
         public override void Animate()
         {
-            if (!Dead)
+            if (!IsDisposed)
             {
                 if (Stage.GetKeyState(Keys.Space) == KeyStates.Down)
                 {
@@ -100,7 +114,7 @@ namespace SpaceInvaderX.Actors
 
         private void Shoot()
         {
-            if (_lastBullet != null && !_lastBullet.Dead)
+            if (_lastBullet != null && !_lastBullet.IsDisposed)
             {
                 return;
             }
