@@ -28,13 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this._timer = new System.Windows.Forms.Timer(this.components);
             this.stage1 = new SpaceInvaderX.Engine.Stage();
             this.SuspendLayout();
+            // 
+            // _timer
+            // 
+            this._timer.Interval = 200;
+            this._timer.Tick += new System.EventHandler(this._timer_Tick);
             // 
             // stage1
             // 
             this.stage1.BackColor = System.Drawing.Color.Black;
             this.stage1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stage1.FrameDuration = 15;
             this.stage1.IsStarted = false;
             this.stage1.Location = new System.Drawing.Point(0, 0);
             this.stage1.Name = "stage1";
@@ -58,6 +66,7 @@
         #endregion
 
         private Engine.Stage stage1;
+        private System.Windows.Forms.Timer _timer;
     }
 }
 

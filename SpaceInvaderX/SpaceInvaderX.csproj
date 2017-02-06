@@ -49,6 +49,7 @@
     <Compile Include="Actors\Bullet.cs" />
     <Compile Include="Actors\Explosion.cs" />
     <Compile Include="Actors\Defender.cs" />
+    <Compile Include="Actors\FPS.cs" />
     <Compile Include="Actors\Target.cs" />
     <Compile Include="Engine\Asset.cs" />
     <Compile Include="Engine\CollidableAsset.cs" />

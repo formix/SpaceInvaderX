@@ -156,7 +156,7 @@ namespace SpaceInvaderX.Engine
 
         private void CleanUp()
         {
-            if (_frame % 50 != 0)
+            if (_frame % 20 != 0)
             {
                 return;
             }

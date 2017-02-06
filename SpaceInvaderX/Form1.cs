@@ -13,9 +13,12 @@ namespace SpaceInvaderX
 {
     public partial class Form1 : Form
     {
+        private Random _rnd;
+        
         public Form1()
         {
             InitializeComponent();
+            _rnd = new Random();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -49,7 +52,14 @@ namespace SpaceInvaderX
             target4.Y = 30;
             stage1.AddAsset(target4);
 
-             
+
+            FPS fps = stage1.Create<FPS>();
+            fps.X = 275;
+            fps.Y = 225;
+            stage1.AddAsset(fps);
+
+
+            _timer.Start();
 
 
             stage1.Start();
@@ -58,6 +68,15 @@ namespace SpaceInvaderX
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             stage1.Stop();
+            _timer.Stop();
+        }
+
+        private void _timer_Tick(object sender, EventArgs e)
+        {
+            Target target = stage1.Create<Target>();
+            target.X = _rnd.Next(310);
+            target.Y = _rnd.Next(150);
+            stage1.AddAsset(target);
         }
     }
 }
